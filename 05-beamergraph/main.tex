@@ -1,0 +1,478 @@
+\usepackage{etex}
+
+\mode<article>{\usepackage{fullpage}}
+\mode<presentation>{
+    \usetheme{Madrid}
+    \useoutertheme{shadow}
+} 
+
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[all]{xy}
+\entrymodifiers={++[o][F-]}
+
+\title[Графы в beamer]{Графы в beamer}
+\date{\today}
+\author[М.~М.~Шихов]{Михаил Шихов \\ \texttt{\underline{kafevm@mail.ru}}}
+
+
+\begin{document}
+
+
+\mode<article>{\maketitle\tableofcontents}
+
+\frame<presentation>{\titlepage}
+\begin{frame}<presentation>[allowframebreaks]
+    \frametitle{Содержание}
+    \tableofcontents
+\end{frame}
+
+
+\section{Основные определения}
+
+\subsection{Графы}
+
+%uncover работает для вершин, а only работает для стрелок!!!
+\begin{frame}
+    \frametitle{Виды графов}
+    \begin{columns}
+        \column{.3\textwidth}
+            \begin{block}{Неориентированный}
+                \[
+                    {\xymatrix{
+                        a \ar@{-}[r] \ar@{-}[d]
+                            &c \ar@{-}[d] \ar@{-}@(u,r)[]
+                                \\
+                        b \ar@{-}[ur] \ar@{-}[r]
+                            &d
+                    }}
+                \]
+                $[c,d]$ --- \alert{ребро}
+            \end{block}
+        
+        \column{.3\textwidth}
+            \begin{block}{Ориентированный}
+                \[
+                    {\xymatrix{
+                        a \ar@{->}[r]
+                            &c \ar@{->}@(u,r)[]
+                                \\
+                        b  \ar@{->}[u] \ar@{->}[ur] \ar@{->}[r]
+                            &d \ar@{->}[u]
+                    }}
+                \]
+                $(d,c)$ --- \alert{дуга}
+            \end{block}
+        \column{.3\textwidth}
+            \begin{block}{Мультиграф}
+            
+                \[
+                    {\xymatrix{
+                        a \ar@{-}[r] \ar@{-}@/^/[d]
+                            &c \ar@{-}[d] \ar@{-}@(u,r)[]
+                                \\
+                        b \ar@{-}[ur] \ar@{-}@/^/[r] \ar@{-}@/^/[u]
+                            &d \ar@{-}@/^/[l]
+                    }}
+                \]
+                $[c,c]$ --- \alert{петля}
+            \end{block}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Помеченные (нагруженные) графы}
+
+    \begin{columns}
+        \column{.3\textwidth}
+            \begin{block}{Помеченный граф}
+                \[
+                    {\xymatrix{
+                        \ar@{-}[r]^{a}
+                            &\ar@{-}@(u,r)[]|-{b}
+                                \\
+                        \ar@{-}[u]^{c} \ar@{-}[ur]|-{d} \ar@{-}[r]_{e}
+                            &\ar@{-}[u]_{f}
+                    }}
+                \]
+            \end{block}
+        \column{.3\textwidth}
+            \begin{block}{Взвешенный орграф}
+                \[
+                    {\xymatrix{
+                        \ar@{->}[r]^{1}
+                            &\ar@{->}@(u,r)[]|-{0}
+                                \\
+                        \ar@{->}[u]^{2} \ar@{->}[ur]|-{3} \ar@{->}[r]_{4}
+                            &\ar@{->}[u]_{5}
+                    }}
+                \]
+            \end{block}
+        \column{.3\textwidth}
+            \begin{block}{Взвешенный орграф}
+                \[
+                    {\xymatrix{
+                        a \ar@{->}[r]^{1}
+                            &c \ar@{->}@(u,r)[]|-{0}
+                                \\
+                        b \ar@{->}[u]^{2} \ar@{->}[ur]|-{3} \ar@{->}[r]_{4}
+                            &d \ar@{->}[u]_{5}
+                    }}
+                \]
+            \end{block}
+    \end{columns}
+\end{frame}
+
+
+\subsection{Элементы графов и их свойства}
+
+\begin{frame}
+    \frametitle{Смежность и инцидентность}
+
+    \[
+        {\xymatrix{
+            \uncover<1,2,3,4,6>{1}
+            \ar@{-}[r]
+                &\uncover<1,6>{3}
+                \ar@{-}@(u,r)[]
+                    \\
+            \uncover<1,2,3,4,5,6>{2}
+            \only<1,5,6>{\ar@{-}[u]}\only<2,3,4>{\ar@{:}[u]} 
+            \ar@{-}[ur] 
+            \only<1,2,4,6>{\ar@{-}[r]}\only<3,5>{\ar@{:}[r]}
+                &\uncover<1,3,5,6>{4}
+                \ar@{-}[u]
+        }}
+    \]
+    
+    \begin{itemize}
+        \item<2,6> Вершины $1$ и $2$ --- \alert<2>{смежны}.
+        \item<3,6> Ребра $[1,2]$ и $[2,4]$ --- \alert<3>{смежны}.
+        \item<4,6> Ребро $[1,2]$ \alert<4>{инцидентно} вершинам $1$ и $2$.
+        \item<5,6> Вершины $2$ и $4$ \alert<5>{инцидентны} ребру $[2,4]$.
+    \end{itemize}
+    \uncover<6>{Смежными бывают однородные элементы, а инцидентными разнородные.}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Степени вершин}
+
+    \begin{columns}
+        \column{.47\textwidth}
+            \begin{block}{Неориентированный граф}
+                \[
+                    {\xymatrix{
+                        a   \only<1,2,4>{\ar@{-}[r]}\only<3>{\ar@{:}[r]}
+                            \only<1,3,4>{\ar@{-}[d]}\only<2>{\ar@{:}[d]}
+                            &c  \only<1,2,4>{\ar@{-}[d]}\only<3>{\ar@{:}[d]}
+                                \only<1,2,4>{\ar@{-}@(u,r)[]}\only<3>{\ar@{:}@(u,r)[]}
+                                \\
+                        b   \only<1,4>{\ar@{-}[ur]}\only<2,3>{\ar@{:}[ur]}  
+                            \only<1,3,4>{\ar@{-}[r]}\only<2>{\ar@{:}[r]}
+                            &d
+                    }}
+                \]
+                \begin{itemize}
+                    \item<2,4> \alert<2>{Степень} вершины $b$=$3$;
+                    \item<3,4> \alert<3>{Степень} вершины $c$=$4$.
+                \end{itemize}
+                \uncover<4>{Сумма степеней всех вершин графа в два раза больше количества ребер.}
+            \end{block}
+        
+        \column{.47\textwidth}
+            \begin{block}{Ориентированный граф}
+                \[
+                    {\xymatrix{
+                        a \ar@{->}[r]
+                            &c \ar@{->}@(u,r)[]
+                                \\
+                        b   \only<1,3,4>{\ar@{->}[u]}\only<2>{\ar@{:>}[u]}
+                            \only<1,2,4>{\ar@{<-}[ur]}\only<3>{\ar@{<:}[ur]}
+                            \only<1,3,4>{\ar@{->}[r]}\only<2>{\ar@{:>}[r]}
+                            &d \ar@{->}[u]
+                    }}
+                \]
+                \begin{itemize}
+                    \item<2,4> Полустепень \alert<2>{исхода} $b$=$2$;
+                    \item<3,4> Полустепень \alert<3>{захода} $b$=$1$.
+                \end{itemize}                
+                \uncover<4>{Сумма соответствующих полустепеней всех вершин графа равна количеству ребер.}
+            \end{block}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Подграф, полный граф и дополнение графа}
+
+    \begin{columns}
+        \column{.3\textwidth}
+            \begin{block}{$G=\langle V,P\rangle,n=5$}
+                \[
+                    {\xymatrix{
+                        *{} 
+                            & \ar@{-}[dr] \ar@{-}[dl] 
+                                &*{}
+                                    \\
+                        {} 
+                            &*{}
+                                & \ar@{-}[d] 
+                                    \\
+                        \ar@{-}[u] 
+                            &*{}
+                                & \ar@{-}[ll]
+                    }}
+                \]
+            \end{block}
+        
+        \column{.3\textwidth}
+            \begin{block}{Полный граф $n=5$}
+                \[
+                    {\xymatrix{
+                        *{} 
+                            & \ar@{-}[dr] \ar@{-}[ddr] \ar@{-}[ddl] \ar@{-}[dl] 
+                                &*{}
+                                    \\
+                        {} 
+                            &*{}
+                                & \ar@{-}[d] \ar@{-}[dll] \ar@{-}[ll] 
+                                    \\
+                        \ar@{-}[u] 
+                            &*{}
+                                & \ar@{-}[ll] \ar@{-}[ull] 
+                    }}
+                \]
+            \end{block}
+        \column{.3\textwidth}
+            \begin{block}{$\overline{G}, n=5$}
+                \[
+                    {\xymatrix{
+                        *{} 
+                            & \ar@{-}[ddr] \ar@{-}[ddl] 
+                                &*{}
+                                    \\
+                        {} 
+                            &*{}
+                                & \ar@{-}[dll] \ar@{-}[ll] 
+                                    \\
+                        {} 
+                            &*{}
+                                & \ar@{-}[ull] 
+                    }}
+                \]
+            \end{block}
+    \end{columns}
+    
+    Количество ребер полного графа 
+    \[
+        m=\frac{n(n-1)}{2}.
+    \]
+\end{frame}
+
+
+\subsection{Маршруты в графах}
+
+\begin{frame}
+    \frametitle{Маршрут $(v_1,v_{n+1})$}
+    \framesubtitle{$v_1,p_1,v_2,p_2,\ldots,p_{n},v_{n+1}$}
+
+    \begin{columns}
+        \column{.4\textwidth}
+            \begin{block}{$G=\langle V,P\rangle,n=5$}
+                \[
+                    {\xymatrix{
+                        1 \ar@{-}[dd]_{a} \ar@{-}[rr]^{d} \ar@{-}[dr]_{b}
+                            &*{}
+                                &4 \ar@{-}[dd]^{h}
+                                    \\
+                        *{} 
+                            &3 \ar@{-}[ur]_{f} \ar@{-}[dr]^{g}
+                                &*{}
+                                    \\
+                        2  \ar@{-}[ur]^{c} \ar@{-}[rr]_{e}
+                            &*{}
+                                &5
+                    }}
+                \]
+            \end{block}
+        
+        \column{.5\textwidth}
+            \begin{block}{Маршрут $(1,5)$ \\ $1,b,3,c,2,a,1,b,3,g,5$}
+                \[
+                    {\xymatrix{
+                        1 \ar@{:}[dd]_{a} \ar@{-}[rr]^{d} \ar@{:}[dr]_{b}
+                            &*{}
+                                &4 \ar@{-}[dd]^{h}
+                                    \\
+                        *{} 
+                            &3 \ar@{-}[ur]_{f} \ar@{:}[dr]^{g}
+                                &*{}
+                                    \\
+                        2  \ar@{:}[ur]^{c} \ar@{-}[rr]_{e}
+                            &*{}
+                                &5
+                    }}
+                \]
+            \end{block}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Цепь и путь}
+
+    \begin{columns}
+        \column{.45\textwidth}
+            \begin{block}{Цепь $(1,2)$\\$1,b,3,g,5,h,4,f,3,c,2$}
+                \[
+                    {\xymatrix{
+                        1 \ar@{-}[dd]_{a} \ar@{-}[rr]^{d} \ar@{:}[dr]_{b}
+                            &*{}
+                                &4 \ar@{:}[dd]^{h}
+                                    \\
+                        *{} 
+                            &3 \ar@{:}[ur]_{f} \ar@{:}[dr]^{g}
+                                &*{}
+                                    \\
+                        2  \ar@{:}[ur]^{c} \ar@{-}[rr]_{e}
+                            &*{}
+                                &5
+                    }}
+                \]
+            \end{block}
+        
+        \column{.45\textwidth}
+            \begin{block}{Путь $(1,4)$\\$1,b,3,g,5,e,2,c,3,f,4$}
+                \[
+                    {\xymatrix{
+                        1 \ar@{<-}[dd]_{a} \ar@{<-}[rr]^{d} \ar@{:>}[dr]_{b}
+                            &*{}
+                                &4 \ar@{<-}[dd]^{h}
+                                    \\
+                        *{} 
+                            &3 \ar@{:>}[ur]_{f} \ar@{:>}[dr]^{g}
+                                &*{}
+                                    \\
+                        2  \ar@{:>}[ur]^{c} \ar@{<:}[rr]_{e}
+                            &*{}
+                                &5
+                    }}
+                \]
+            \end{block}
+    \end{columns}    
+\end{frame}
+
+\begin{frame}
+    \frametitle{Простая цепь и простой путь}
+
+    \begin{columns}
+        \column{.45\textwidth}
+            \begin{block}{Простая цепь $(1,2)$\\$1,b,3,g,5,e,2$}
+                \[
+                    {\xymatrix{
+                        1 \ar@{-}[dd]_{a} \ar@{-}[rr]^{d} \ar@{:}[dr]_{b}
+                            &*{}
+                                &4 \ar@{-}[dd]^{h}
+                                    \\
+                        *{} 
+                            &3 \ar@{-}[ur]_{f} \ar@{:}[dr]^{g}
+                                &*{}
+                                    \\
+                        2  \ar@{-}[ur]^{c} \ar@{:}[rr]_{e}
+                            &*{}
+                                &5
+                    }}
+                \]
+            \end{block}
+        
+        \column{.45\textwidth}
+            \begin{block}{Простой путь $(1,4)$\\$1,b,3,g,5,h,4$}
+                \[
+                    {\xymatrix{
+                        1 \ar@{<-}[dd]_{a} \ar@{<-}[rr]^{d} \ar@{:>}[dr]_{b}
+                            &*{}
+                                &4 \ar@{<:}[dd]^{h}
+                                    \\
+                        *{} 
+                            &3 \ar@{->}[ur]_{f} \ar@{:>}[dr]^{g}
+                                &*{}
+                                    \\
+                        2  \ar@{->}[ur]^{c} \ar@{<-}[rr]_{e}
+                            &*{}
+                                &5
+                    }}
+                \]
+            \end{block}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Цикл и контур}
+
+    \begin{columns}
+        \column{.45\textwidth}
+            \begin{block}{Цикл \\$1,d,4,h,5,e,2,a,1$}
+                \[
+                    {\xymatrix{
+                        1 \ar@{:}[dd]_{a} \ar@{:}[rr]^{d} \ar@{-}[dr]_{b}
+                            &*{}
+                                &4 \ar@{:}[dd]^{h}
+                                    \\
+                        *{} 
+                            &3 \ar@{-}[ur]_{f} \ar@{-}[dr]^{g}
+                                &*{}
+                                    \\
+                        2  \ar@{-}[ur]^{c} \ar@{:}[rr]_{e}
+                            &*{}
+                                &5
+                    }}
+                \]
+            \end{block}
+        
+        \column{.45\textwidth}
+            \begin{block}{Контур\\$1,b,3,g,5,e,2,c,3,f,4,d,1$}
+                \[
+                    {\xymatrix{
+                        1 \ar@{<-}[dd]_{a} \ar@{<:}[rr]^{d} \ar@{:>}[dr]_{b}
+                            &*{}
+                                &4 \ar@{<-}[dd]^{h}
+                                    \\
+                        *{} 
+                            &3 \ar@{:>}[ur]_{f} \ar@{:>}[dr]^{g}
+                                &*{}
+                                    \\
+                        2  \ar@{:>}[ur]^{c} \ar@{<:}[rr]_{e}
+                            &*{}
+                                &5
+                    }}
+                \]
+            \end{block}
+    \end{columns}    
+    Циклы и контуры также могут быть \alert{простыми}, если все проходимые вершины различны.
+\end{frame}
+
+\section{Способы задания графов}
+
+\appendix
+
+\section{Библиография}
+
+Библиографию, конечно, можно определить и не используя bibtex!
+
+\begin{frame}
+    \frametitle{Источники}
+    
+    Из книг по \LaTeXe\ можно рекомендовать \cite{bib:cotelnikov,bib:baldin}. Про \TeX\ от автора \cite{bib:knuth:AllAbout}.
+\end{frame}
+
+
+%слайд раскладывается на несколько: allowframebreaks
+\begin{frame}[allowframebreaks]{Библиография}
+
+    \bibliographystyle{gost780u}
+    \bibliography{bibliobase}
+\end{frame}
+
+
+\end{document}

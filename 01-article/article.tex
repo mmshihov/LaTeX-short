@@ -1,0 +1,60 @@
+\documentclass{article} %указываем класс
+
+%подключаем необходимые пакеты
+\usepackage[utf8]{inputenc} %кодировка текста
+\usepackage[russian]{babel} %поддержка русского языка
+\usepackage{indentfirst} %у русских принято делать 
+                         %отступ у первого абзаца
+
+%глобальная настройка командами
+\title{Структура \LaTeX\ документа} %название
+\author{М.~М.~Шихов} %автор
+\date{\today} %дата создания документа
+
+\begin{document} %начало тела документа
+    \maketitle %титульный лист
+    \newpage
+    \begin{abstract}
+        Текст  аннотации.
+    \end{abstract}
+    
+    \newpage
+    \tableofcontents %оглавление,содержание
+    
+    \newpage
+
+    \section{Заглавие первой секции}
+    Текст первой секции, абзац первый.
+    \begin{equation}
+        \label{eq:pifagorv2}
+        x=\sqrt{a^2+b^2}
+    \end{equation}
+    
+    Первая ссылка (\ref{eq:pifagorv2})
+    
+
+    \section{Заглавие первой секции}
+    Текст первой секции, абзац первый.
+    \begin{equation}
+        \label{eq:pifagor}
+        x=\sqrt{a^2+b^2}
+    \end{equation}
+    
+    Первая ссылка (\ref{eq:pifagor})
+    
+    \section{Заглавие первой секции}
+    Текст первой секции, абзац первый.
+    
+    Текст первой секции, абзац второй.
+    \subsection{Заглавие первой подсекции}
+    Текст первой подсекции.
+    
+    Из книг по \LaTeXe\ можно рекомендовать \cite{bib:cotelnikov,bib:baldin}. Про \TeX\ от автора \cite{bib:knuth:AllAbout}.
+    
+    
+    \begin{thebibliography}{99}
+        \bibitem{bib:cotelnikov} И.Котельников. \LaTeX\ по-русски / И.Котельников, П.Чеботаев --- Новосибирск:Сибирский хронограф,2009.---496 с.
+        \bibitem{bib:baldin} Е.М.Балдин. Компьютерная типография \LaTeX\ / Е.М.Балдин. --- СПб.:БХВ-Петербург,2008. --- 304 c.
+        \bibitem{bib:knuth:AllAbout}Д.Э.Кнут. Все про \TeX\ /Д.Э.Кнут --- М.: Вильямс,2003. ---560
+    \end{thebibliography}
+\end{document} %конец документа
